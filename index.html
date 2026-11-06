@@ -1,0 +1,982 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ระบบบริหารบัญชีส่วนตัว TUNGTANG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>/* บังคับใช้ฟอนต์ Kanit ทุกส่วน */
+*,
+*::before,
+*::after {
+  font-family: 'Kanit', sans-serif !important;
+}
+
+html, body {
+  font-family: 'Kanit', sans-serif !important;
+}
+
+button,
+input,
+select,
+textarea,
+option {
+  font-family: 'Kanit', sans-serif !important;
+}
+
+/* ปรับน้ำหนักตัวอักษร */
+body {
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, strong, b {
+  font-weight: 600;
+}
+
+button {
+  font-weight: 500;
+}
+:root {
+  --primary: #176b50;
+  --primary-dark: #104d39;
+  --primary-light: #e7f3ed;
+  --background: #f5f8f6;
+  --white: #ffffff;
+  --text: #26372f;
+  --muted: #87938c;
+  --green: #15965e;
+  --red: #df5555;
+  --border: #e8eeea;
+  --shadow: 0 5px 20px rgba(30,70,50,.055);
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+header {
+  background: linear-gradient(135deg,#104d39,#20805e);
+  color: white;
+  padding: 25px 15px;
+  text-align: center;
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: .3px;
+  box-shadow: 0 4px 15px #176b5025;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 3px 12px #00000008;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 11px 17px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--primary);
+  color: white;
+  transition: .2s ease;
+}
+
+button:hover {
+  filter: brightness(.94);
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: scale(.97);
+}
+
+nav button {
+  background: #f0f5f2;
+  color: var(--primary);
+  white-space: nowrap;
+  border-radius: 10px;
+}
+
+nav button.active {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 3px 10px #176b5030;
+}
+
+.container {
+  max-width: 1050px;
+  margin: 25px auto;
+  padding: 15px;
+}
+
+.page {
+  display: none;
+  animation: appear .25s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 750;
+  margin: 10px 0 20px;
+  color: var(--text);
+}
+
+h3 {
+  font-size: 17px;
+  margin-top: 0;
+}
+
+.card {
+  background: var(--white);
+  padding: 21px;
+  border-radius: 16px;
+  margin-bottom: 17px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 14px;
+}
+
+.stat {
+  text-align: left;
+  min-height: 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat:first-child {
+  border-top: 4px solid #20a36a;
+}
+
+.stat:nth-child(2) {
+  border-top: 4px solid #e45c5c;
+}
+
+.stat:nth-child(3) {
+  border-top: 4px solid #3887c8;
+}
+
+.stat b {
+  display: block;
+  font-size: 23px;
+  margin-top: 13px;
+  overflow-wrap: anywhere;
+}
+
+.green, .income {
+  color: var(--green);
+}
+
+.red, .expense {
+  color: var(--red);
+}
+
+.blue, .balance {
+  color: #3887c8;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 650;
+  margin-top: 13px;
+  color: #40564a;
+}
+
+input, select {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #dce6df;
+  border-radius: 10px;
+  margin: 7px 0 13px;
+  font-size: 15px;
+  color: var(--text);
+  background: #fbfdfb;
+  outline: none;
+  transition: .2s;
+}
+
+input:focus, select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px #176b5018;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 10px 0 17px;
+}
+
+.option {
+  background: #edf4ef;
+  color: var(--primary);
+  border: 1px solid transparent;
+  border-radius: 10px;
+}
+
+.option.selected {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 3px 9px #176b5030;
+}
+
+.full {
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: 11px;
+  font-size: 15px;
+}
+
+.item {
+  padding: 15px 2px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.small, .muted {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.actions button {
+  font-size: 12px;
+  padding: 8px 12px;
+}
+
+.edit {
+  background: #e6a83b;
+}
+
+.delete {
+  background: #dc5757;
+}
+
+.account {
+  border-left: 5px solid var(--primary);
+  border-radius: 12px;
+}
+
+.progress {
+  height: 11px;
+  background: #e8eee9;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg,#15965e,#55c58b);
+  border-radius: 20px;
+  transition: width .3s;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 17px 0;
+}
+
+@media(max-width:650px) {
+  header {
+    font-size: 19px;
+    padding: 20px 10px;
+  }
+
+  nav {
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 10px;
+  }
+
+  nav button {
+    flex: 0 0 auto;
+    min-width: 85px;
+    font-size: 13px;
+    padding: 11px;
+  }
+
+  .container {
+    padding: 10px;
+    margin: 12px auto;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .stat {
+    min-height: auto;
+    padding: 17px;
+  }
+
+  .stat b {
+    font-size: 22px;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 13px;
+  }
+
+  h2 {
+    font-size: 19px;
+  }
+
+  .item {
+    align-items: flex-start;
+  }
+
+  .actions button {
+    padding: 8px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<header>💰 ระบบบริหารบัญชีส่วนตัว TUNGTANG</header>
+
+<nav>
+<button class="active" onclick="page('dashboard',this)">ภาพรวม</button>
+<button onclick="page('accounts',this)">บัญชี</button>
+<button onclick="page('add',this)">บันทึกเงิน</button>
+<button onclick="page('planner',this)">วางแผนเงิน</button>
+<button onclick="page('history',this)">ประวัติ</button>
+</nav>
+
+<div class="container">
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page active">
+<h2>📊 ภาพรวมการเงิน</h2>
+
+<div class="stats">
+<div class="card stat">รายรับทั้งหมด<b class="green" id="income">0</b></div>
+<div class="card stat">รายจ่ายทั้งหมด<b class="red" id="expense">0</b></div>
+<div class="card stat">เงินคงเหลือ<b class="blue" id="balance">0</b></div>
+</div>
+
+<div class="card">
+<h3>🏦 ยอดเงินแยกตามบัญชี</h3>
+<div id="accountSummary"></div>
+</div>
+
+<div class="card">
+<h3>📅 รอบเงินปัจจุบัน</h3>
+<div id="cycleSummary"></div>
+</div>
+
+<div class="card">
+<h3>รายการล่าสุด</h3>
+<div id="recent"></div>
+</div>
+</section>
+
+<!-- ACCOUNTS -->
+<section id="accounts" class="page">
+<h2>🏦 จัดการบัญชี</h2>
+
+<div class="card">
+<h3>เพิ่มบัญชีใหม่</h3>
+<label>ชื่อบัญชี</label>
+<input id="accountName" placeholder="เช่น เงินสด, ธนาคาร, เงินเก็บ">
+<label>ประเภทบัญชี</label>
+<select id="accountType">
+<option>เงินสด</option>
+<option>ธนาคาร</option>
+<option>เงินออม</option>
+<option>อื่นๆ</option>
+</select>
+<button class="full" onclick="addAccount()">+ สร้างบัญชี</button>
+</div>
+
+<div class="card">
+<h3>บัญชีทั้งหมด</h3>
+<div id="accountList"></div>
+</div>
+</section>
+
+<!-- ADD TRANSACTION -->
+<section id="add" class="page">
+<h2 id="formTitle">➕ บันทึกรายการเงิน</h2>
+
+<div class="card">
+<label>ประเภทรายการ</label>
+<div class="options" id="types">
+<button class="option selected" onclick="chooseType('รายรับ',this)">รายรับ</button>
+<button class="option" onclick="chooseType('รายจ่าย',this)">รายจ่าย</button>
+</div>
+
+<label>เลือกบัญชี</label>
+<select id="txAccount"></select>
+
+<label>วันที่</label>
+<input type="date" id="txDate">
+
+<label>จำนวนเงิน (บาท)</label>
+<input type="number" id="txAmount" min="0.01" step="0.01" placeholder="ระบุจำนวนเงิน">
+
+<label>หมวดหมู่</label>
+<div id="categories" class="options"></div>
+
+<label>สถานะ</label>
+<select id="txStatus">
+<option>ปกติ</option>
+<option>รอตรวจสอบ</option>
+<option>ยกเลิก</option>
+</select>
+
+<label>รายละเอียด</label>
+<input id="txNote" placeholder="หมายเหตุ">
+
+<button class="full" onclick="saveTx()">💾 บันทึกรายการ</button>
+<button class="full" id="cancelEdit" style="display:none;background:#777" onclick="resetForm()">ยกเลิกแก้ไข</button>
+</div>
+</section>
+
+<!-- PLANNER -->
+<section id="planner" class="page">
+<h2>📅 วางแผนรอบเงินออก</h2>
+
+<div class="card">
+<h3>1. กำหนดรูปแบบรอบเงิน</h3>
+<label>เลือกรอบเงินของคุณ</label>
+<select id="schedule" onchange="saveSchedule()">
+<option value="twice">เงินออกวันที่ 5 และ 20</option>
+<option value="monthly">เงินเดือนออกวันที่ 1</option>
+<option value="weekly">เงินออกรายสัปดาห์ (7 วัน)</option>
+</select>
+
+<div id="weeklySetting" style="display:none">
+<label>วันที่เริ่มรอบสัปดาห์</label>
+<input type="date" id="weeklyAnchor" onchange="saveSchedule()">
+</div>
+
+<div class="card" style="background:#f0f6f2;margin-top:10px">
+<div class="muted">รอบปัจจุบัน</div>
+<h3 id="cycleName">-</h3>
+<div id="cycleDate" class="muted"></div>
+<div class="muted" style="margin-top:10px">วันรับเงินรอบถัดไป</div>
+<b id="nextPay">-</b>
+</div>
+</div>
+
+<div class="card">
+<h3>2. กำหนดรายรับที่คาดว่าจะได้รับ</h3>
+<label>จำนวนเงินที่คาดว่าจะได้รับในรอบนี้</label>
+<input type="number" id="expectedIncome" min="0" placeholder="เช่น 15000">
+<button class="full" onclick="saveExpected()">บันทึกรายรับที่คาดไว้</button>
+</div>
+
+<div class="card">
+<h3>3. วางแผนจัดสรรเงิน</h3>
+<label>หมวดหมู่ค่าใช้จ่าย</label>
+<select id="planCategory">
+<option>อาหาร</option>
+<option>เดินทาง</option>
+<option>ที่พัก</option>
+<option>ค่าน้ำไฟ</option>
+<option>หนี้สิน</option>
+<option>เงินเก็บ</option>
+<option>ครอบครัว</option>
+<option>อื่นๆ</option>
+</select>
+
+<label>งบประมาณที่ต้องการ</label>
+<input type="number" id="planAmount" min="0" placeholder="จำนวนเงิน">
+<button class="full" onclick="addPlan()">+ เพิ่มงบประมาณ</button>
+
+<div id="planList"></div>
+</div>
+
+<div class="card">
+<h3>4. สรุปแผนการเงินรอบนี้</h3>
+<div id="planSummary"></div>
+</div>
+</section>
+
+<!-- HISTORY -->
+<section id="history" class="page">
+<h2>📋 ประวัติรายการ</h2>
+<div class="card">
+<label>เลือกบัญชี</label>
+<select id="filterAccount" onchange="renderHistory()">
+<option value="all">ทุกบัญชี</option>
+</select>
+
+<label>ประเภท</label>
+<select id="filterType" onchange="renderHistory()">
+<option value="all">ทั้งหมด</option>
+<option>รายรับ</option>
+<option>รายจ่าย</option>
+</select>
+
+<label>เดือน</label>
+<input type="month" id="filterMonth" onchange="renderHistory()">
+
+<div id="historyList"></div>
+</div>
+</section>
+
+</div>
+
+<script>
+// ================= DATABASE =================
+
+const oldRecords=JSON.parse(localStorage.getItem('moneyRecords')||'[]');
+
+let accounts=JSON.parse(localStorage.getItem('accounts')||'null') || [
+ {id:1,name:'เงินสด',type:'เงินสด'},
+ {id:2,name:'ธนาคาร',type:'ธนาคาร'},
+ {id:3,name:'เงินเก็บ',type:'เงินออม'}
+];
+
+let transactions=JSON.parse(localStorage.getItem('transactions')||'null');
+
+if(transactions===null){
+ transactions=oldRecords.map(r=>({...r,accountId:1}));
+}
+
+let plans=JSON.parse(localStorage.getItem('plans')||'{}');
+let expected=JSON.parse(localStorage.getItem('expected')||'{}');
+
+let schedule=localStorage.getItem('schedule')||'twice';
+let anchor=localStorage.getItem('weeklyAnchor')||today();
+let type='รายรับ';
+let category='เงินเดือน';
+let editId=null;
+
+const cats={
+ รายรับ:['เงินเดือน','ค้าขาย','งานเสริม','โบนัส','ดอกเบี้ย','อื่นๆ'],
+ รายจ่าย:['อาหาร','เดินทาง','ที่พัก','ค่าน้ำไฟ','หนี้สิน','ช้อปปิ้ง','สุขภาพ','อื่นๆ']
+};
+
+function saveDB(){
+ localStorage.setItem('accounts',JSON.stringify(accounts));
+ localStorage.setItem('transactions',JSON.stringify(transactions));
+ localStorage.setItem('plans',JSON.stringify(plans));
+ localStorage.setItem('expected',JSON.stringify(expected));
+}
+
+function today(){
+ const d=new Date();
+ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function money(n){
+ return Number(n).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function dateObj(s){
+ const [y,m,d]=s.split('-').map(Number);
+ return new Date(y,m-1,d);
+}
+
+function fmt(d){
+ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function addDays(d,n){
+ let x=new Date(d);
+ x.setDate(x.getDate()+n);
+ return x;
+}
+
+function page(id,btn){
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+ btn.classList.add('active');
+ render();
+}
+
+// ================= ACCOUNTS =================
+
+function addAccount(){
+ const name=document.getElementById('accountName').value.trim();
+ if(!name){alert('กรุณาระบุชื่อบัญชี');return}
+ accounts.push({
+  id:Date.now(),
+  name,
+  type:document.getElementById('accountType').value
+ });
+ document.getElementById('accountName').value='';
+ saveDB();render();
+}
+
+function accountBalance(id){
+ return transactions.filter(t=>t.accountId===id&&t.status==='ปกติ')
+ .reduce((sum,t)=>sum+(t.type==='รายรับ'?t.amount:-t.amount),0);
+}
+
+function deleteAccount(id){
+ if(accounts.length<=1){alert('ต้องมีอย่างน้อยหนึ่งบัญชี');return}
+ if(transactions.some(t=>t.accountId===id)){
+  alert('บัญชีนี้มีรายการอยู่ กรุณาย้ายหรือจัดการรายการก่อนลบบัญชี');
+  return;
+ }
+ if(confirm('ยืนยันลบบัญชี?')){
+  accounts=accounts.filter(a=>a.id!==id);
+  saveDB();render();
+ }
+}
+
+function renderAccounts(){
+ document.getElementById('accountList').innerHTML=accounts.map(a=>`
+ <div class="card account">
+ <b>${esc(a.name)}</b>
+ <div class="small">${esc(a.type)}</div>
+ <h3 class="green">${money(accountBalance(a.id))} บาท</h3>
+ <button class="delete" onclick="deleteAccount(${a.id})">ลบบัญชี</button>
+ </div>`).join('');
+
+ const opts=accounts.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('');
+ document.getElementById('txAccount').innerHTML=opts;
+
+ const current=document.getElementById('filterAccount').value;
+ document.getElementById('filterAccount').innerHTML=
+ '<option value="all">ทุกบัญชี</option>'+opts;
+ document.getElementById('filterAccount').value=
+ current==='all'?'all':current;
+}
+
+// ================= TRANSACTIONS =================
+
+function chooseType(v,btn){
+ type=v;category=cats[v][0];
+ document.querySelectorAll('#types button').forEach(x=>x.classList.remove('selected'));
+ btn.classList.add('selected');
+ renderCategories();
+}
+
+function renderCategories(){
+ document.getElementById('categories').innerHTML=cats[type].map(c=>`
+ <button class="option ${category===c?'selected':''}" onclick="selectCategory('${c}')">${c}</button>
+ `).join('');
+}
+
+function selectCategory(c){
+ category=c;renderCategories();
+}
+
+function saveTx(){
+ const date=document.getElementById('txDate').value;
+ const amount=Number(document.getElementById('txAmount').value);
+ const accountId=Number(document.getElementById('txAccount').value);
+
+ if(!date||!Number.isFinite(amount)||amount<=0||!accountId){
+  alert('กรุณากรอกข้อมูลให้ครบถ้วน');return;
+ }
+
+ const r={
+  id:editId||Date.now(),
+  date,amount,type,category,accountId,
+  status:document.getElementById('txStatus').value,
+  note:document.getElementById('txNote').value
+ };
+
+ if(editId) transactions=transactions.map(x=>x.id===editId?r:x);
+ else transactions.push(r);
+
+ saveDB();
+ alert('บันทึกเรียบร้อย');
+ resetForm();
+ page('dashboard',document.querySelector('nav button'));
+}
+
+function editTx(id){
+ const r=transactions.find(x=>x.id===id);
+ if(!r)return;
+ editId=id;type=r.type;category=r.category;
+
+ document.getElementById('formTitle').textContent='✏️ แก้ไขรายการ';
+ document.getElementById('txDate').value=r.date;
+ document.getElementById('txAmount').value=r.amount;
+ document.getElementById('txAccount').value=r.accountId;
+ document.getElementById('txStatus').value=r.status;
+ document.getElementById('txNote').value=r.note||'';
+ document.getElementById('cancelEdit').style.display='block';
+
+ document.querySelectorAll('#types button').forEach(b=>{
+  b.classList.toggle('selected',b.textContent===type);
+ });
+ renderCategories();
+ page('add',document.querySelectorAll('nav button')[2]);
+}
+
+function deleteTx(id){
+ if(confirm('ยืนยันลบรายการนี้?')){
+  transactions=transactions.filter(x=>x.id!==id);
+  saveDB();render();
+ }
+}
+
+function resetForm(){
+ editId=null;type='รายรับ';category='เงินเดือน';
+ document.getElementById('formTitle').textContent='➕ บันทึกรายการเงิน';
+ document.getElementById('txDate').value=today();
+ document.getElementById('txAmount').value='';
+ document.getElementById('txNote').value='';
+ document.getElementById('txStatus').value='ปกติ';
+ document.getElementById('cancelEdit').style.display='none';
+ document.querySelectorAll('#types button').forEach((b,i)=>b.classList.toggle('selected',i===0));
+ renderCategories();
+}
+
+function esc(s){
+ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function txHTML(r){
+ const a=accounts.find(x=>x.id===r.accountId);
+ const sign=r.type==='รายรับ'?'+':'-';
+ return `<div class="item">
+ <div><b>${esc(r.category)}</b>
+ <div class="small">${esc(r.date)} • ${esc(a?.name||'ไม่พบบัญชี')}</div>
+ <div class="small">${esc(r.status)} ${esc(r.note||'')}</div></div>
+ <div style="text-align:right">
+ <b class="${r.type==='รายรับ'?'green':'red'}">${sign}${money(r.amount)}</b>
+ <div class="actions">
+ <button class="edit" onclick="editTx(${r.id})">แก้ไข</button>
+ <button class="delete" onclick="deleteTx(${r.id})">ลบ</button>
+ </div></div></div>`;
+}
+
+// ================= PAY CYCLE =================
+
+function saveSchedule(){
+ schedule=document.getElementById('schedule').value;
+ anchor=document.getElementById('weeklyAnchor').value||today();
+ localStorage.setItem('schedule',schedule);
+ localStorage.setItem('weeklyAnchor',anchor);
+ render();
+}
+
+function getCycle(){
+ const now=dateObj(today());
+ let start,end,next,name;
+
+ if(schedule==='monthly'){
+  start=new Date(now.getFullYear(),now.getMonth(),1);
+  end=new Date(now.getFullYear(),now.getMonth()+1,0);
+  next=new Date(now.getFullYear(),now.getMonth()+1,1);
+  name='รอบเงินเดือน วันที่ 1';
+ }
+
+ if(schedule==='twice'){
+  const y=now.getFullYear(),m=now.getMonth();
+  if(now.getDate()>=20){
+   start=new Date(y,m,20);
+   end=new Date(y,m+1,4);
+   next=new Date(y,m+1,5);
+   name='รอบวันที่ 20';
+  }else if(now.getDate()>=5){
+   start=new Date(y,m,5);
+   end=new Date(y,m,19);
+   next=new Date(y,m,20);
+   name='รอบวันที่ 5';
+  }else{
+   start=new Date(y,m-1,20);
+   end=new Date(y,m,4);
+   next=new Date(y,m,5);
+   name='รอบวันที่ 20';
+  }
+ }
+
+ if(schedule==='weekly'){
+  const base=dateObj(anchor);
+  const diff=Math.floor((now-base)/86400000);
+  const weeks=Math.floor(diff/7);
+  start=addDays(base,weeks*7);
+  end=addDays(start,6);
+  next=addDays(start,7);
+  name='รอบรายสัปดาห์';
+ }
+
+ return {start,end,next,name,key:fmt(start)};
+}
+
+function saveExpected(){
+ const c=getCycle();
+ expected[c.key]=Number(document.getElementById('expectedIncome').value)||0;
+ saveDB();render();
+ alert('บันทึกรายรับคาดการณ์แล้ว');
+}
+
+function addPlan(){
+ const amount=Number(document.getElementById('planAmount').value);
+ const cat=document.getElementById('planCategory').value;
+ if(!Number.isFinite(amount)||amount<=0){alert('กรุณาระบุงบประมาณ');return}
+
+ const key=getCycle().key;
+ if(!plans[key])plans[key]=[];
+ plans[key].push({id:Date.now(),cat,amount});
+ document.getElementById('planAmount').value='';
+ saveDB();render();
+}
+
+function removePlan(id){
+ const key=getCycle().key;
+ plans[key]=(plans[key]||[]).filter(x=>x.id!==id);
+ saveDB();render();
+}
+
+function renderPlanner(){
+ const c=getCycle();
+ document.getElementById('schedule').value=schedule;
+ document.getElementById('weeklySetting').style.display=
+ schedule==='weekly'?'block':'none';
+ document.getElementById('weeklyAnchor').value=anchor;
+
+ document.getElementById('cycleName').textContent=c.name;
+ document.getElementById('cycleDate').textContent=
+ fmt(c.start)+' ถึง '+fmt(c.end);
+ document.getElementById('nextPay').textContent=fmt(c.next);
+
+ const key=c.key;
+ const exp=expected[key]||0;
+ document.getElementById('expectedIncome').value=exp||'';
+
+ const list=plans[key]||[];
+ const budget=list.reduce((s,x)=>s+x.amount,0);
+
+ const actual=transactions.filter(t=>
+  t.status==='ปกติ'&&t.type==='รายจ่าย'&&
+  dateObj(t.date)>=c.start&&dateObj(t.date)<=c.end
+ ).reduce((s,t)=>s+t.amount,0);
+
+ const html=list.map(p=>`
+ <div class="item">
+ <div><b>${esc(p.cat)}</b><div class="small">งบประมาณ ${money(p.amount)} บาท</div></div>
+ <button class="delete" onclick="removePlan(${p.id})">ลบ</button>
+ </div>`).join('');
+
+ document.getElementById('planList').innerHTML=html||'<p class="muted">ยังไม่ได้กำหนดงบประมาณ</p>';
+
+ const remaining=exp-budget;
+ const available=exp-actual;
+ const ratio=budget?Math.min(100,actual/budget*100):0;
+
+ document.getElementById('planSummary').innerHTML=`
+ <p>รายรับที่คาดว่าจะได้รับ <b class="green">${money(exp)}</b> บาท</p>
+ <p>งบประมาณที่จัดสรร <b>${money(budget)}</b> บาท</p>
+ <p>เงินหลังหักงบที่วางแผน <b class="${remaining>=0?'green':'red'}">${money(remaining)}</b> บาท</p>
+ <hr>
+ <p>รายจ่ายจริงในรอบนี้ <b class="red">${money(actual)}</b> บาท</p>
+ <div class="progress"><span style="width:${ratio}%"></span></div>
+ <p>เงินคาดการณ์ที่ยังเหลือหลังหักรายจ่ายจริง <b class="${available>=0?'green':'red'}">${money(available)}</b> บาท</p>
+ <p class="muted">หมายเหตุ: งบประมาณที่จัดสรรยังไม่ใช่ยอดหักเงินจริง</p>`;
+}
+
+// ================= HISTORY =================
+
+function renderHistory(){
+ const acc=document.getElementById('filterAccount').value;
+ const t=document.getElementById('filterType').value;
+ const m=document.getElementById('filterMonth').value;
+
+ const list=transactions.filter(r=>
+  (acc==='all'||r.accountId===Number(acc))&&
+  (t==='all'||r.type===t)&&
+  (!m||r.date.startsWith(m))
+ ).sort((a,b)=>b.date.localeCompare(a.date));
+
+ document.getElementById('historyList').innerHTML=
+ list.length?list.map(txHTML).join(''):'<p>ไม่พบรายการ</p>';
+}
+
+// ================= DASHBOARD =================
+
+function renderDashboard(){
+ const valid=transactions.filter(t=>t.status==='ปกติ');
+ const inc=valid.filter(t=>t.type==='รายรับ').reduce((s,t)=>s+t.amount,0);
+ const exp=valid.filter(t=>t.type==='รายจ่าย').reduce((s,t)=>s+t.amount,0);
+
+ document.getElementById('income').textContent=money(inc);
+ document.getElementById('expense').textContent=money(exp);
+ document.getElementById('balance').textContent=money(inc-exp);
+
+ document.getElementById('accountSummary').innerHTML=accounts.map(a=>`
+ <div class="item"><b>${esc(a.name)}</b><b>${money(accountBalance(a.id))} ฿</b></div>
+ `).join('');
+
+ const c=getCycle();
+ document.getElementById('cycleSummary').innerHTML=`
+ <b>${c.name}</b>
+ <div class="small">${fmt(c.start)} ถึง ${fmt(c.end)}</div>
+ <p>วันเงินเข้าครั้งถัดไป: <b>${fmt(c.next)}</b></p>`;
+
+ const recent=[...transactions].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+ document.getElementById('recent').innerHTML=
+ recent.length?recent.map(txHTML).join(''):'<p>ยังไม่มีรายการ</p>';
+}
+
+function render(){
+ renderAccounts();
+ renderDashboard();
+ renderPlanner();
+ renderHistory();
+}
+
+document.getElementById('schedule').value=schedule;
+document.getElementById('txDate').value=today();
+renderCategories();
+render();
+</script>
+</body>
+</html>
